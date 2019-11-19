@@ -10,6 +10,9 @@ RUN \
 	yum clean all && \
 	rm -rf /var/cache/yum
 
+# add configuration
+COPY lvm.conf /etc/lvm/lvm.conf
+
 # add startup script
 COPY targetd-start /usr/bin/targetd-start
 
