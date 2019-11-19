@@ -1,0 +1,47 @@
+#!/bin/sh
+
+# exit on failure
+set -e
+
+# exit on unassigned variable
+set -u
+
+# variables
+config_file=/etc/target/targetd.yaml
+
+# generate targetd config file if asked
+if [ "${TARGETD_GENERATE_CONFIG:-false}" = "true" ]; then
+	echo "generating targetd configuration ${config_file}" >&2
+
+	if [ -z "${TARGETD_PASSWORD:-}" ]; then
+		echo "TARGETD_PASSWORD environment variable is mandatory" >&2
+		exit 1
+	fi
+
+	cat >/etc/target/targetd.yaml <<-EOF
+	# targetd configuration ( see https://www.systutorials.com/docs/linux/man/8-targetd/ for details )
+
+	# authentication
+	user: ${TARGETD_USER:-admin}
+	password: ${TARGETD_PASSWORD}
+
+	# LVM
+	pool_name: ${TARGETD_POOLNAME:-vg-targetd}
+
+	# iSCSI
+	target_name: ${TARGETD_TARGETNAME:-iqn.2003-01.org.linux-iscsi.${HOSTNAME}:targetd}
+
+	# SSL
+	ssl: ${TARGETD_SSL:-false}
+	ssl_cert: ${TARGETD_SSL_CERT:-/etc/target/targetd_cert.pem}
+	ssl_key: ${TARGETD_SSL_KEY:-/etc/target/targetd_key.pem}
+
+	# Log level (debug, info, warning, error, critical)
+	log_level: ${TARGETD_LOGLEVEL:-info}
+	EOF
+
+else
+	echo "using existing targetd configuration ${config_file}" >&2
+fi
+
+exec /usr/bin/targetd
