@@ -6,7 +6,7 @@ It exposes an HTTP API to programmatically create LVM volume and export those ov
 This could be used in conjunction with [iSCSI-targetd provisioner](https://github.com/kubernetes-incubator/external-storage/tree/master/iscsi/targetd)
 for kubernetes.
 
-An helm chart for that provisioner is available [here](https://github.com/lionelnicolas/helm-iscsi-provisioner).
+An helm chart for that provisioner is available [here](https://github.com/lionelnicolas/helm-iscsi-targetd-provisioner).
 
 ## Usage
 
