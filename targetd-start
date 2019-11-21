@@ -44,4 +44,10 @@ else
 	echo "using existing targetd configuration ${config_file}" >&2
 fi
 
+# restore existing targets if any
+if [ -f /etc/target/saveconfig.json ]; then
+	targetctl restore
+fi
+
+# start targetd
 exec /usr/bin/targetd
